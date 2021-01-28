@@ -1,4 +1,10 @@
-/* Initialize Sales */ 
+/* Initialize Sales 
+  
+    Insert records into Sales_by_Product tables.  Insert strings created
+    by Make_SalesByProduct_SQL_Insert.py.
+    
+    August 2020 drl*/
+
 use testdb ;
 
 /* Sales_by_Product (Order_Date date, 	Order_Number integer,     Customer_Key integer,

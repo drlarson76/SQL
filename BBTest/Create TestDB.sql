@@ -1,4 +1,6 @@
-/* Create TestDB  */
+/* Create TestDB  
+	TestDB contains tables used to verify TestBB queries are correct.alter
+    August 2020 drl 		*/
 
 drop database if exists TestDB ;
 create database TestDB ;

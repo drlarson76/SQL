@@ -1,4 +1,10 @@
-/* Initialize TestDB */
+/* Initialize TestDB 
+	Insert records into Customer, Discount, and Product tables in testdb.
+    Tables created by Create TestDB.sql.alter
+    
+    Sales_by_Product tables initialized in "Initialize Sales.sql"	
+    
+    August 2020 drl*/
 
 use testdb ;
 

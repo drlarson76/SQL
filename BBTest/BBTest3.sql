@@ -1,4 +1,8 @@
-/* BBTest.sql */
+/* BBTest3.sql 
+	Work and query answers to BB Test.
+    Tables are in testdb database.
+    August 2020 drl 			*/
+use testdb ;
 
 /* How many customers are from the United States, excluding AK and HI? */
 select count(Customer_ID) as Customer_Count
@@ -20,15 +24,6 @@ select count(*) as Orders_Over_10
 
 /* Identify whether any duplicate product codes exist. */
 
-/* Method 1, assumes Product_Key unique and will produce multiple
-	entries for Product_Code duplicates */
-select p1.Product_Code as Has_Duplicate_Product_Code
-	from Product p1
-	join Product p2
-	on p1.Product_Code = p2.Product_Code
-		and p1.Product_Key <> p2.Product_Key ;
-
-/* Method 2, more complicated, but only 1 Product_Code output per duplicate */
 select distinct p1.Product_Code as Has_Duplicate_Product_Code_B
 	from Product p1, 
 		(select p3.Product_Code, count(p3.Product_Code) as Count_Product_Code
@@ -43,7 +38,7 @@ select distinct p1.Product_Code as Has_Duplicate_Product_Code_B
 /* 8. What was the total net product dollars in 2018 from 
 	Canadian customers who used a “coupon” discount type on 
 	any order during 2017? */
-
+/* Submitted Answer  */
 select sum(S.Net_Product_Dollars) as Total_Net_Product_Dollars_2017
 	from  Sales_by_Product S 
 	join  Customer C
@@ -60,7 +55,7 @@ select sum(S.Net_Product_Dollars) as Total_Net_Product_Dollars_2017
 	and C.Country = 'Canada'
 	and year(S.Order_Date) = '2018' ;
 
-
+/* Incorrect #1  */
 select sum(S.Net_Product_Dollars) as Total_Net_Product_Dollars_2017_B
 	from  Sales_by_Product S 
 	join  Customer C
@@ -76,10 +71,7 @@ select sum(S.Net_Product_Dollars) as Total_Net_Product_Dollars_2017_B
 	and C.Country = 'Canada'
 	and year(S.Order_Date) = '2017' ;
 	
-
-
-
-/* Question has both '2018' and '2017', I used '2017' */ 
+/* Incorrect #2   */ 
 select sum(S.Net_Product_Dollars) as Total_Net_Product_Dollars_2017_C
 	from  Sales_by_Product S 
 	join  Customer C
@@ -126,19 +118,20 @@ select avg(Q1.Clothes_Order_Value) as Average_Clothes_Order_Value_M2
 		) Q2
 	where abs(Q1.Clothes_Order_Value - Q2.CAve) < @N_Std_Dev*Q2.CStd ;
 
-		select avg(Sub1.Clothes_Order_Value) as CAve,
-			stddev(Sub1.Clothes_Order_Value) as CStd
-			from 
-			(select S.Order_Number,
-				sum(Total_Order_Dollars) as Clothes_Order_Value
-				from Sales_by_Product S
-				where S.Order_Number in 
-					(select S2.Order_Number
-						from Sales_by_Product S2
-						join Product P
-							on S2.Product_Key = P.Product_Key
-						where P.Category_Name = 'clothing' )
-				group by S.Order_Number ) Sub1 ;
+/* Work to develop the Std Deviation used in Query in Method 2 */
+select avg(Sub1.Clothes_Order_Value) as CAve,
+	stddev(Sub1.Clothes_Order_Value) as CStd
+	from 
+	(select S.Order_Number,
+		sum(Total_Order_Dollars) as Clothes_Order_Value
+		from Sales_by_Product S
+		where S.Order_Number in 
+			(select S2.Order_Number
+				from Sales_by_Product S2
+				join Product P
+					on S2.Product_Key = P.Product_Key
+				where P.Category_Name = 'clothing' )
+		group by S.Order_Number ) Sub1 ;
 
 
 /* Method 1, set a fixed outlier threshold */
